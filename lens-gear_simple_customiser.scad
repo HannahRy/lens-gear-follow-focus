@@ -10,9 +10,9 @@
 // http://www.thingiverse.com/sveltema
 
 // Change this number to vary the overall gear diameter
-NUMBER_OF_TEETH = 95; // [10:1:260]
+NUMBER_OF_TEETH = 106 ; // [10:1:260]
 // Hole diameter. Change by 0.5mm increments and test
-BORE_DIAMETER = 70.0;  // [3:.1:200]
+BORE_DIAMETER = 79.0;  // [3:.1:200]
 // Thickness of the gear
 GEAR_THICKNESS = 10;   // [1:1:60]
 
@@ -212,25 +212,20 @@ module involute_gear_tooth (
 
 	res=(involute_facets!=0)?involute_facets:($fn==0)?5:$fn/4;
 
-	union ()
-	{
-		for (i=[1:res])
-		assign (
-			point1=involute (base_radius,start_angle+(stop_angle - start_angle)*(i-1)/res),
-			point2=involute (base_radius,start_angle+(stop_angle - start_angle)*i/res))
-		{
-			assign (
-				side1_point1=rotate_point (centre_angle, point1),
-				side1_point2=rotate_point (centre_angle, point2),
-				side2_point1=mirror_point (rotate_point (centre_angle, point1)),
-				side2_point2=mirror_point (rotate_point (centre_angle, point2)))
-			{
-				polygon (
-					points=[[0,0],side1_point1,side1_point2,side2_point2,side2_point1],
-					paths=[[0,1,2,3,4,0]]);
-			}
-		}
-	}
+	union () { 
+        for (i=[1:res]) { 
+            point1=involute (base_radius,start_angle+(stop_angle - start_angle)*(i-1)/res); 
+            point2=involute (base_radius,start_angle+(stop_angle - start_angle)*i/res); 
+            { side1_point1=rotate_point (centre_angle, point1); 
+                side1_point2=rotate_point (centre_angle, point2); 
+                side2_point1=mirror_point (rotate_point (centre_angle, point1)); 
+                side2_point2=mirror_point (rotate_point (centre_angle, point2)); 
+                { polygon ( points=[[0,0],side1_point1,side1_point2,side2_point2,side2_point1], 
+                    paths=[[0,1,2,3,4,0]]); 
+                } 
+            } 
+       } 
+   }
 }
 
 /* [Hidden] */
